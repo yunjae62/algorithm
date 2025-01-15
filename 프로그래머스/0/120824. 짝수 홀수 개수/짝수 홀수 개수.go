@@ -1,5 +1,5 @@
 func solution(num_list []int) []int {
-    var even, odd int
+    even, odd := 0, 0
     
     for _, v := range num_list {
         if v % 2 == 0 {
