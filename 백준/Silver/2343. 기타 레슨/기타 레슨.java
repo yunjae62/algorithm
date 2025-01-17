@@ -1,41 +1,59 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
-import java.util.stream.IntStream;
+import java.util.StringTokenizer;
 
 public class Main {
 
     static int N, M;
-    static int[] times;
+    static int[] arr;
 
-    public static void main(String[] args) {
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
 
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
-        times = new int[N];
-        IntStream.range(0, N).forEach(i -> times[i] = sc.nextInt());
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int start = Arrays.stream(times).max().getAsInt();
-        int end = Arrays.stream(times).sum();
+        N = stoi(st.nextToken());
+        M = stoi(st.nextToken());
 
-        while (start < end) {
-            int mid = (start + end) / 2;
-            int total = 1, temp = 0;
-            for (int time : times) {
-                temp += time;
-                if (temp > mid) {
-                    total++;
-                    temp = time;
+        arr = new int[N];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = stoi(st.nextToken());
+        }
+
+        int left = Arrays.stream(arr).max().getAsInt();
+        int right = Arrays.stream(arr).sum();
+
+        // 블루레이 크기를 X축, 해당 크기로 나눠진 블루레이 개수를 Y축이라고 할 때, Y값이 M이 되는 최소 X값
+        // lower bound
+
+        while (left < right) {
+            int mid = (left + right) / 2;
+
+            int total = 0;
+            int count = 1;
+            for (int x : arr) {
+                if (total + x > mid) {
+                    count++;
+                    total = x;
+                } else {
+                    total += x;
                 }
             }
 
-            if (total <= M) {
-                end = mid;
+            if (count > M) {
+                left = mid + 1;
             } else {
-                start = mid + 1;
+                right = mid;
             }
         }
 
-        System.out.println(end);
+        System.out.println(left);
     }
 }
