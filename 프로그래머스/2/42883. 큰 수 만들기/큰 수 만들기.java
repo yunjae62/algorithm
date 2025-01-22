@@ -3,19 +3,21 @@ import java.util.*;
 class Solution {
     public String solution(String numbers, int k) {
         StringBuilder sb = new StringBuilder();
-        int idx = 0;
+        Stack<Character> stack = new Stack<>();
+        int len = numbers.length() - k;
         
-        for (int i = 0; i < numbers.length() - k; i++) {
-            char max = '0';
+        for (int i = 0; i < numbers.length(); i++) {
+            char now = numbers.charAt(i);
             
-            for (int j = idx; j <= i + k; j++) {
-                if (numbers.charAt(j) > max) {
-                    max = numbers.charAt(j);
-                    idx = j + 1;
-                }
+            while (!stack.isEmpty() && stack.peek() < now && k-- > 0) {
+                stack.pop();
             }
             
-            sb.append(max);
+            stack.push(now);
+        }
+        
+        for (int i = 0; i < len; i++) {
+            sb.append(stack.get(i));
         }
         
         return sb.toString(); 
