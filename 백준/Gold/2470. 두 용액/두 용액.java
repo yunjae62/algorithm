@@ -1,14 +1,17 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static int N;
+    static int[] arr;
 
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
-
-    static int N, leftIdx, leftAnswerIdx, rightIdx, rightAnswerIdx, minGap;
-    static int[] arr;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,27 +27,32 @@ public class Main {
 
         Arrays.sort(arr);
 
-        leftIdx = leftAnswerIdx = 0;
-        rightIdx = rightAnswerIdx = N - 1;
-        minGap = Integer.MAX_VALUE;
+        int start = 0;
+        int end = N - 1;
+        int left = arr[0];
+        int right = arr[N - 1];
 
-        while (leftIdx < rightIdx) {
-            int nowSum = arr[rightIdx] + arr[leftIdx];
-            int nowGap = Math.abs(nowSum);
+        while (start < end) {
+            int sum = arr[start] + arr[end];
 
-            if (nowGap < minGap) {
-                minGap = nowGap;
-                leftAnswerIdx = leftIdx;
-                rightAnswerIdx = rightIdx;
+            if (sum == 0) {
+                left = arr[start];
+                right = arr[end];
+                break;
             }
 
-            if (nowSum > 0) {
-                rightIdx--;
+            if (Math.abs(left + right) > Math.abs(sum)) {
+                left = arr[start];
+                right = arr[end];
+            }
+
+            if (sum < 0) {
+                start++;
             } else {
-                leftIdx++;
+                end--;
             }
         }
 
-        System.out.println(arr[leftAnswerIdx] + " " + arr[rightAnswerIdx]);
+        System.out.println(left + " " + right);
     }
 }
