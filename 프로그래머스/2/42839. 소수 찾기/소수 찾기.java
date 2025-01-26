@@ -16,10 +16,7 @@ class Solution {
             dfs(0, 0, "", numbers, i);
         }
         
-        System.out.println(set);
-        int[] nums = set.stream().mapToInt(Integer::intValue).toArray();
-        Arrays.sort(nums);
-        System.out.println(Arrays.toString(nums));
+        int[] nums = set.stream().mapToInt(Integer::intValue).sorted().toArray();
         
         int max = Math.max(2, nums[nums.length - 1]);
         composites = new boolean[max + 1];
