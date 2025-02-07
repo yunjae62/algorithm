@@ -1,55 +1,67 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static final int MAX = 100_000;
+    static int N, K;
+    static boolean[] visited = new boolean[MAX + 1];
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
-    static int N;
-    static int K;
-    static Queue<Integer> q;
-    static int MAX_NUM = 100_001;
-    static int[] visited;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
         K = stoi(st.nextToken());
-        q = new LinkedList<>();
-//        MAX_NUM = Math.max(N, K) + 1;
-        visited = new int[MAX_NUM];
 
-        bfs(N);
-        System.out.println(visited[K] - 1);
-    }
-
-    static void bfs(int now) {
-        q.add(now);
-        visited[now] = 1;
+        Queue<Node> q = new LinkedList<>();
+        q.add(new Node(N, 0));
+        visited[N] = true;
 
         while (!q.isEmpty()) {
-            int next = q.poll();
+            Node now = q.poll();
 
-            if (next == K) return;
-            else {
-                if (0 <= next - 1 && next - 1 < MAX_NUM && visited[next - 1] == 0) {
-                    q.add(next - 1);
-                    visited[next - 1] = visited[next] + 1;
-                }
-                if (0 <= next + 1 && next + 1 < MAX_NUM && visited[next + 1] == 0) {
-                    q.add(next + 1);
-                    visited[next + 1] = visited[next] + 1;
-                }
-                if (0 <= next * 2 && next * 2 < MAX_NUM && visited[next * 2] == 0) {
-                    q.add(next * 2);
-                    visited[next * 2] = visited[next] + 1;
-                }
+            if (now.n == K) {
+                System.out.println(now.count);
+                return;
             }
+
+            if (isValid(now.n - 1)) {
+                q.add(new Node(now.n - 1, now.count + 1));
+                visited[now.n - 1] = true;
+            }
+
+            if (isValid(now.n + 1)) {
+                q.add(new Node(now.n + 1, now.count + 1));
+                visited[now.n + 1] = true;
+            }
+
+            if (isValid(2 * now.n)) {
+                q.add(new Node(2 * now.n, now.count + 1));
+                visited[2 * now.n] = true;
+            }
+        }
+    }
+
+    static boolean isValid(int x) {
+        return 0 <= x && x <= MAX && !visited[x];
+    }
+
+    static class Node {
+
+        int n, count;
+
+        public Node(int n, int count) {
+            this.n = n;
+            this.count = count;
         }
     }
 }
