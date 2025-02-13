@@ -10,8 +10,7 @@ public class Main {
 
     static int N;
     static int[] peoples;
-    static int[][] memo;
-    static boolean[] visited;
+    static int[][] dp;
     static List<List<Integer>> graph = new ArrayList<>();
 
     static int stoi(String s) {
@@ -25,13 +24,12 @@ public class Main {
         N = stoi(st.nextToken());
 
         peoples = new int[N + 1];
-        memo = new int[N + 1][2];
-        visited = new boolean[N + 1];
+        dp = new int[N + 1][2];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 1; i <= N; i++) {
             peoples[i] = stoi(st.nextToken());
-            Arrays.fill(memo[i], -1);
+            Arrays.fill(dp[i], -1);
         }
 
         for (int i = 0; i <= N; i++) {
@@ -48,35 +46,28 @@ public class Main {
             graph.get(v).add(u);
         }
 
-        System.out.println(Math.max(traversal(1, 0), traversal(1, 1) + peoples[1]));
+        System.out.println(Math.max(rec(1, -1, 1) + peoples[1], rec(1, -1, 0)));
     }
 
-    static int traversal(int now, int flag) {
-        if (graph.get(now).isEmpty()) {
-            return 0;
+    static int rec(int now, int prev, int flag) {
+        if (dp[now][flag] != -1) {
+            return dp[now][flag];
         }
 
-        if (memo[now][flag] != -1) {
-            return memo[now][flag];
-        }
-
-        visited[now] = true;
-        memo[now][flag] = 0;
+        dp[now][flag] = 0;
 
         for (int next : graph.get(now)) {
-            if (visited[next]) {
+            if (next == prev) {
                 continue;
             }
 
             if (flag == 1) {
-                memo[now][flag] += traversal(next, 0);
+                dp[now][flag] += rec(next, now, 0);
             } else {
-                memo[now][flag] += Math.max(traversal(next, 1) + peoples[next], traversal(next, 0));
+                dp[now][flag] += Math.max(rec(next, now, 1) + peoples[next], rec(next, now, 0));
             }
         }
 
-        visited[now] = false;
-
-        return memo[now][flag];
+        return dp[now][flag];
     }
 }
