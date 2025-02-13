@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -12,7 +9,6 @@ public class Main {
 
     static int N, M;
     static int[] parents;
-    static Queue<Edge> q = new PriorityQueue<>(Comparator.comparingInt(o -> o.u));
     static Set<Integer> connectedComponents = new HashSet<>();
 
     static int stoi(String s) {
