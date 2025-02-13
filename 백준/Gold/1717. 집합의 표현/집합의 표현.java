@@ -1,57 +1,56 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static int N, M;
+    static int[] parents;
+    static StringBuilder sb = new StringBuilder();
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
-    static int N, M;
-	static int[] parents;
-	static StringBuilder sb = new StringBuilder();
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
-		M = stoi(st.nextToken());
-		parents = new int[N + 1];
-		for (int i = 0; i <= N; i++) {
-			parents[i] = i;
-		}
+        M = stoi(st.nextToken());
 
-		Arrays.sort(parents);
+        parents = new int[N + 1];
 
-		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			boolean isUnion = stoi(st.nextToken()) == 0;
-			int a = stoi(st.nextToken());
-			int b = stoi(st.nextToken());
+        for (int i = 0; i <= N; i++) {
+            parents[i] = i;
+        }
 
-			if (isUnion) {
-				union(a, b);
-			} else {
-				String out = find(a) != find(b) ? "NO" : "YES";
-				sb.append(out).append("\n");
-			}
-		}
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
 
-		System.out.println(sb);
+            int op = stoi(st.nextToken());
+            int a = stoi(st.nextToken());
+            int b = stoi(st.nextToken());
+
+            int aRoot = find(a);
+            int bRoot = find(b);
+
+            if (op == 1) {
+                sb.append(aRoot == bRoot ? "YES" : "NO").append("\n");
+            } else {
+                parents[Math.max(aRoot, bRoot)] = Math.min(aRoot, bRoot);
+            }
+        }
+
+        System.out.println(sb);
     }
 
-	static int find(int x) {
-		return parents[x] == x ? x : (parents[x] = find(parents[x]));
-	}
+    static int find(int x) {
+        if (parents[x] == x) {
+            return x;
+        }
 
-	static void union(int a, int b) {
-		int aRoot = find(a);
-		int bRoot = find(b);
-
-		if (aRoot < bRoot) {
-			parents[bRoot] = aRoot;
-		} else {
-			parents[aRoot] = bRoot;
-		}
-	}
+        return parents[x] = find(parents[x]);
+    }
 }
