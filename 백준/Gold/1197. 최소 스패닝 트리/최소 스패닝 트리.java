@@ -1,83 +1,79 @@
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static int V, E, totalCost;
+    static int[] parents;
+    static Queue<Edge> q = new PriorityQueue<>();
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
-    static int V;
-    static int E;
-    static int[] parents;
-    static Edge[] edgeList;
-
-    static class Edge implements Comparable<Edge> {
-        int from, to, weight;
-
-        public Edge(int from, int to, int weight) {
-            this.from = from;
-            this.to = to;
-            this.weight = weight;
-        }
-
-        @Override
-        public int compareTo(Edge o) {
-            return Integer.compare(this.weight, o.weight);
-        }
-    }
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         V = stoi(st.nextToken());
         E = stoi(st.nextToken());
-        edgeList = new Edge[E];
+
         parents = new int[V + 1];
 
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
-            edgeList[i] = new Edge(stoi(st.nextToken()), stoi(st.nextToken()), stoi(st.nextToken()));
+        for (int i = 0; i <= V; i++) {
+            parents[i] = i;
         }
-        
-        System.out.println(kruskal());
-    }
 
-    static int kruskal() {
-        int res = 0, cnt = 0;
-        Arrays.sort(edgeList);
+        for (int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
 
-        make();
+            int u = stoi(st.nextToken());
+            int v = stoi(st.nextToken());
+            int cost = stoi(st.nextToken());
 
-        for (Edge edge : edgeList) {
-            if (union(edge.from, edge.to)) {
-                res += edge.weight;
-                cnt++;
-                if (cnt == V - 1) return res;
+            Edge edge = new Edge(u, v, cost);
+            q.add(edge);
+        }
+
+        while (!q.isEmpty()) {
+            Edge now = q.poll();
+
+            int uRoot = find(now.u);
+            int vRoot = find(now.v);
+
+            if (uRoot != vRoot) {
+                parents[Math.max(uRoot, vRoot)] = Math.min(uRoot, vRoot);
+                totalCost += now.cost;
             }
         }
 
-        return res;
+        System.out.println(totalCost);
     }
 
-    static boolean union(int a, int b) {
-        int aRoot = find(a);
-        int bRoot = find(b);
-        if (aRoot == bRoot) return false;
-        parents[aRoot] = bRoot;
-        return true;
+    static int find(int x) {
+        if (parents[x] == x) {
+            return x;
+        }
+
+        return parents[x] = find(parents[x]);
     }
 
-    static int find(int a) {
-        if (a == parents[a]) return a;
-        return parents[a] = find(parents[a]);
-    }
+    static class Edge implements Comparable<Edge> {
 
-    static void make() {
-        for (int i = 1; i <= V; i++) {
-            parents[i] = i;
+        int u, v, cost;
+
+        public Edge(int u, int v, int cost) {
+            this.u = u;
+            this.v = v;
+            this.cost = cost;
+        }
+
+        public int compareTo(Edge o) {
+            return Integer.compare(this.cost, o.cost);
         }
     }
 }
