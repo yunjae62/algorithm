@@ -9,8 +9,8 @@ import java.util.StringTokenizer;
 public class Main {
 
     static int N;
-    static int[] peoples;
-    static int[][] dp;
+    static int[] towns;
+    static int[][] memos;
     static List<List<Integer>> graph = new ArrayList<>();
 
     static int stoi(String s) {
@@ -23,17 +23,17 @@ public class Main {
 
         N = stoi(st.nextToken());
 
-        peoples = new int[N + 1];
-        dp = new int[N + 1][2];
-
-        st = new StringTokenizer(br.readLine());
-        for (int i = 1; i <= N; i++) {
-            peoples[i] = stoi(st.nextToken());
-            Arrays.fill(dp[i], -1);
-        }
+        towns = new int[N + 1];
+        memos = new int[N + 1][2];
 
         for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
+            Arrays.fill(memos[i], -1);
+        }
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= N; i++) {
+            towns[i] = stoi(st.nextToken());
         }
 
         for (int i = 0; i < N - 1; i++) {
@@ -46,15 +46,15 @@ public class Main {
             graph.get(v).add(u);
         }
 
-        System.out.println(Math.max(rec(1, -1, 1) + peoples[1], rec(1, -1, 0)));
+        System.out.println(Math.max(rec(1, -1, 0), rec(1, -1, 1) + towns[1]));
     }
 
     static int rec(int now, int prev, int flag) {
-        if (dp[now][flag] != -1) {
-            return dp[now][flag];
+        if (memos[now][flag] != -1) {
+            return memos[now][flag];
         }
 
-        dp[now][flag] = 0;
+        memos[now][flag] = 0;
 
         for (int next : graph.get(now)) {
             if (next == prev) {
@@ -62,12 +62,12 @@ public class Main {
             }
 
             if (flag == 1) {
-                dp[now][flag] += rec(next, now, 0);
+                memos[now][flag] += rec(next, now, 0);
             } else {
-                dp[now][flag] += Math.max(rec(next, now, 1) + peoples[next], rec(next, now, 0));
+                memos[now][flag] += Math.max(rec(next, now, 0), rec(next, now, 1) + towns[next]);
             }
         }
 
-        return dp[now][flag];
+        return memos[now][flag];
     }
 }
