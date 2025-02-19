@@ -1,15 +1,17 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-
-    static int stoi(String s) {
-        return Integer.parseInt(s);
-    }
 
     static int N, K;
     static Item[] items;
     static Integer[][] dp;
+
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,25 +28,25 @@ public class Main {
             items[i] = new Item(stoi(st.nextToken()), stoi(st.nextToken()));
         }
 
-        System.out.println(dp(N - 1, K));
+        System.out.println(rec(N - 1, K));
     }
 
-    static int dp(int i, int maxWeight) {
-        if (maxWeight <= 0 || i < 0) {
+    static int rec(int idx, int maxWeight) {
+        if (idx < 0 || maxWeight < 0) {
             return 0;
         }
 
-        if (dp[i][maxWeight] != null) {
-            return dp[i][maxWeight];
+        if (dp[idx][maxWeight] != null) {
+            return dp[idx][maxWeight];
         }
 
-        Item item = items[i];
+        Item item = items[idx];
 
         if (item.weight > maxWeight) {
-            return dp[i][maxWeight] = dp(i - 1, maxWeight);
+            return dp[idx][maxWeight] = rec(idx - 1, maxWeight);
         }
 
-        return dp[i][maxWeight] = Math.max(dp(i - 1, maxWeight), dp(i - 1, maxWeight - item.weight) + item.value);
+        return dp[idx][maxWeight] = Math.max(rec(idx - 1, maxWeight), rec(idx - 1, maxWeight - item.weight) + item.value);
     }
 
     static class Item {
