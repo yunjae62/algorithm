@@ -5,8 +5,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N, S, min = Integer.MAX_VALUE;
-    static int[] arr, sums;
+    static int N, S;
+    static int[] arr;
 
     static int stoi(String s) {
         return Integer.parseInt(s);
@@ -20,35 +20,30 @@ public class Main {
         S = stoi(st.nextToken());
 
         arr = new int[N];
-        sums = new int[N];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            int input = stoi(st.nextToken());
-            arr[i] = input;
-            sums[i] = input;
+            arr[i] = stoi(st.nextToken());
         }
 
-        for (int i = 1; i < N; i++) {
-            sums[i] += sums[i - 1];
-        }
+        int min = Integer.MAX_VALUE;
+        int right = 0;
+        int total = arr[right];
 
-        int end = 0;
-
-        for (int start = 0; start < N; start++) {
-            while (end < N && sums[end] - sums[start] + arr[start] < S) {
-                end++;
+        for (int left = 0; left < N; left++) {
+            while (right < N && total < S) {
+                right++;
+                if (right != N) {
+                    total += arr[right];
+                }
             }
 
-            if (end == N) {
+            if (right == N) {
                 break;
             }
 
-            int total = sums[end] - sums[start] + arr[start];
-
-            if (total >= S) {
-                min = Math.min(end - start + 1, min);
-            }
+            min = Math.min(min, right - left + 1);
+            total -= arr[left];
         }
 
         System.out.println(min == Integer.MAX_VALUE ? 0 : min);
