@@ -1,14 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static Map<String, Integer> dp = new HashMap<>();
+    static final int MAX = 20;
     static StringBuilder sb = new StringBuilder();
+    static int[][][] dp = new int[MAX + 1][MAX + 1][MAX + 1];
 
     static int stoi(String s) {
         return Integer.parseInt(s);
@@ -31,7 +30,11 @@ public class Main {
 
             int ans = w(a, b, c);
 
-            sb.append("w(").append(a).append(", ").append(b).append(", ").append(c).append(") = ").append(ans).append("\n");
+            sb.append("w(")
+                .append(a).append(", ")
+                .append(b).append(", ")
+                .append(c).append(") = ")
+                .append(ans).append("\n");
         }
 
         System.out.println(sb);
@@ -42,35 +45,18 @@ public class Main {
             return 1;
         }
 
-        if (a > 20 || b > 20 || c > 20) {
-            String key = makeKey(20, 20, 20);
-            if (dp.containsKey(key)) {
-                return dp.get(key);
-            }
-            dp.put(key, w(20, 20, 20));
-            return dp.get(key);
+        if (a > MAX || b > MAX || c > MAX) {
+            return w(MAX, MAX, MAX);
+        }
+
+        if (dp[a][b][c] != 0) {
+            return dp[a][b][c];
         }
 
         if (a < b && b < c) {
-            String key = makeKey(a, b, c);
-            if (dp.containsKey(key)) {
-                return dp.get(key);
-            }
-            int value = w(a, b, c - 1) + w(a, b - 1, c - 1) - w(a, b - 1, c);
-            dp.put(key, value);
-            return dp.get(key);
+            return dp[a][b][c] = w(a, b, c - 1) + w(a, b - 1, c - 1) - w(a, b - 1, c);
         }
 
-        String key = makeKey(a, b, c);
-        if (dp.containsKey(key)) {
-            return dp.get(key);
-        }
-        int value = w(a - 1, b, c) + w(a - 1, b - 1, c) + w(a - 1, b, c - 1) - w(a - 1, b - 1, c - 1);
-        dp.put(key, value);
-        return dp.get(key);
-    }
-
-    static String makeKey(int a, int b, int c) {
-        return String.format("%02d%02d%02d", a, b, c);
+        return dp[a][b][c] = w(a - 1, b, c) + w(a - 1, b - 1, c) + w(a - 1, b, c - 1) - w(a - 1, b - 1, c - 1);
     }
 }
