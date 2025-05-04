@@ -1,24 +1,40 @@
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static int N, M;
+    static Map<Integer, Integer> map = new HashMap<>();
+    static StringBuilder sb = new StringBuilder();
+
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(br.readLine());
-        Map<Integer, Integer> map = new HashMap<>();
-        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        for (int ele : input) {
-            map.put(ele, map.getOrDefault(ele, 0) + 1);
+        N = stoi(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            int x = stoi(st.nextToken());
+            map.put(x, map.getOrDefault(x, 0) + 1);
         }
-        int M = Integer.parseInt(br.readLine());
-        int[] output = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        for (int ele : output) {
-            bw.write(map.getOrDefault(ele, 0) + " ");
+
+        M = stoi(br.readLine());
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            int x = stoi(st.nextToken());
+            sb.append(map.getOrDefault(x, 0)).append(" ");
         }
-        bw.close();
+
+        System.out.println(sb);
     }
 }
