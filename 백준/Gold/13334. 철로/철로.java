@@ -1,23 +1,32 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static int N, D, answer;
+    static List<Road> roads = new ArrayList<>();
+    static Queue<Integer> pq = new PriorityQueue<>();
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
-
-    static int N, D;
-    static int answer;
-    static List<Road> roads = new ArrayList<>();
-    static Queue<Integer> pq = new PriorityQueue<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
+
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
+
             int h = stoi(st.nextToken());
             int o = stoi(st.nextToken());
 
@@ -26,17 +35,10 @@ public class Main {
 
         D = stoi(br.readLine());
 
-        sweeping();
-
-        System.out.println(answer);
-    }
-
-    private static void sweeping() {
-        
         Collections.sort(roads);
 
         for (Road road : roads) {
-            if (road.end - road.start > D) {
+            if (D < road.end - road.start) {
                 continue;
             }
 
@@ -48,9 +50,12 @@ public class Main {
 
             answer = Math.max(answer, pq.size());
         }
+
+        System.out.println(answer);
     }
 
     static class Road implements Comparable<Road> {
+
         int start, end;
 
         public Road(int start, int end) {
@@ -58,12 +63,12 @@ public class Main {
             this.end = end;
         }
 
-        public int compareTo(Road other) {
-            if (this.end == other.end) {
-                return Integer.compare(this.start, other.start);
+        @Override
+        public int compareTo(Road o) {
+            if (this.end == o.end) {
+                return Integer.compare(this.start, o.start);
             }
-
-            return Integer.compare(this.end, other.end);
+            return Integer.compare(this.end, o.end);
         }
     }
 }
