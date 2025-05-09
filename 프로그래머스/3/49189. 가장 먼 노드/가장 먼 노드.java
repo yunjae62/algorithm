@@ -1,78 +1,63 @@
 import java.util.*;
 
 class Solution {
-    
+
     int[] distances;
-    boolean[] visited;
     List<List<Edge>> graph = new ArrayList<>();
-    
+
     public int solution(int n, int[][] edges) {
-        int answer = 0;
-        
         distances = new int[n + 1];
-        visited = new boolean[n + 1];
-        
+
         for (int i = 0; i <= n; i++) {
             graph.add(new ArrayList<>());
         }
-        
+
         for (int[] edge : edges) {
-            int a = edge[0];
-            int b = edge[1];
-            
+            int a = edge[0], b = edge[1];
             graph.get(a).add(new Edge(b, 1));
             graph.get(b).add(new Edge(a, 1));
         }
-        
+
         Arrays.fill(distances, Integer.MAX_VALUE);
-        
-        dijkstra();
-        
-        distances[0] = 0;
-        int maxLen = Arrays.stream(distances).max().getAsInt();
-        
-        for (int distance : distances) {
-            if (distance == maxLen) {
-                answer++;
-            }
+        dijkstra(1);
+
+        int maxLen = Arrays.stream(distances, 1, distances.length).max().getAsInt();
+
+        int count = 0;
+        for (int i = 1; i <= n; i++) {
+            if (distances[i] == maxLen) count++;
         }
-        
-        return answer;
+
+        return count;
     }
-    
-    void dijkstra() {
-        Queue<Edge> pq = new PriorityQueue<>();
-        pq.add(new Edge(1, 0));
-        distances[1] = 0;
-        
+
+    void dijkstra(int start) {
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        distances[start] = 0;
+        pq.add(new Edge(start, 0));
+
         while (!pq.isEmpty()) {
-            Edge now = pq.poll();
-            
-            if (visited[now.dest]) {
-                continue;
-            }
-            
-            visited[now.dest] = true;
-            
-            for (Edge next : graph.get(now.dest)) {
-                int nextCost = now.cost + next.cost;
-                if (distances[next.dest] > nextCost) {
+            Edge curr = pq.poll();
+
+            if (curr.cost > distances[curr.dest]) continue;
+
+            for (Edge next : graph.get(curr.dest)) {
+                int nextCost = curr.cost + next.cost;
+                if (nextCost < distances[next.dest]) {
                     distances[next.dest] = nextCost;
                     pq.add(new Edge(next.dest, nextCost));
                 }
             }
         }
     }
-    
-    class Edge implements Comparable<Edge> {
-        
+
+    static class Edge implements Comparable<Edge> {
         int dest, cost;
-        
-        public Edge(int dest, int cost) {
+        Edge(int dest, int cost) {
             this.dest = dest;
             this.cost = cost;
         }
-        
+
         public int compareTo(Edge o) {
             return Integer.compare(this.cost, o.cost);
         }
