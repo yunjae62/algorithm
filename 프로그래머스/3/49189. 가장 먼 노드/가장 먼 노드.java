@@ -2,64 +2,46 @@ import java.util.*;
 
 class Solution {
 
-    int[] distances;
-    List<List<Edge>> graph = new ArrayList<>();
-
     public int solution(int n, int[][] edges) {
-        distances = new int[n + 1];
-
+        List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
             graph.add(new ArrayList<>());
         }
 
         for (int[] edge : edges) {
-            int a = edge[0], b = edge[1];
-            graph.get(a).add(new Edge(b, 1));
-            graph.get(b).add(new Edge(a, 1));
+            int a = edge[0];
+            int b = edge[1];
+            
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
+        
+        int[] distances = new int[n + 1];
+        Arrays.fill(distances, -1); 
+        distances[1] = 0;
 
-        Arrays.fill(distances, Integer.MAX_VALUE);
-        dijkstra(1);
+        Queue<Integer> q = new LinkedList<>();
+        q.add(1);
 
-        int maxLen = Arrays.stream(distances, 1, distances.length).max().getAsInt();
-
-        int count = 0;
-        for (int i = 1; i <= n; i++) {
-            if (distances[i] == maxLen) count++;
-        }
-
-        return count;
-    }
-
-    void dijkstra(int start) {
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        distances[start] = 0;
-        pq.add(new Edge(start, 0));
-
-        while (!pq.isEmpty()) {
-            Edge curr = pq.poll();
-
-            if (curr.cost > distances[curr.dest]) continue;
-
-            for (Edge next : graph.get(curr.dest)) {
-                int nextCost = curr.cost + next.cost;
-                if (nextCost < distances[next.dest]) {
-                    distances[next.dest] = nextCost;
-                    pq.add(new Edge(next.dest, nextCost));
+        while (!q.isEmpty()) {
+            int now = q.poll();
+            for (int next : graph.get(now)) {
+                if (distances[next] == -1) {
+                    distances[next] = distances[now] + 1;
+                    q.add(next);
                 }
             }
         }
-    }
 
-    static class Edge implements Comparable<Edge> {
-        int dest, cost;
-        Edge(int dest, int cost) {
-            this.dest = dest;
-            this.cost = cost;
+        int max = Arrays.stream(distances).max().getAsInt();
+        int count = 0;
+        
+        for (int distance : distances) {
+            if (distance == max) {
+                count++;
+            }
         }
 
-        public int compareTo(Edge o) {
-            return Integer.compare(this.cost, o.cost);
-        }
+        return count;
     }
 }
