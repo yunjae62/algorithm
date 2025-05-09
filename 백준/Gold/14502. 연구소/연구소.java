@@ -1,49 +1,73 @@
-import java.util.*;
-import java.util.stream.IntStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N, M, res = Integer.MIN_VALUE;
+    static int N, M, answer;
     static int[][] graph;
-    static List<Point> virus = new ArrayList<>();
+    static List<Node> virusList = new ArrayList<>();
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    public static void main(String[] args) {
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
 
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = stoi(st.nextToken());
+        M = stoi(st.nextToken());
+
         graph = new int[N][M];
 
         for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
-                graph[i][j] = sc.nextInt();
+                graph[i][j] = stoi(st.nextToken());
+
                 if (graph[i][j] == 2) {
-                    virus.add(new Point(i, j));
+                    virusList.add(new Node(i, j));
                 }
             }
         }
 
         dfs(0);
-        System.out.println(res);
+
+        System.out.println(answer);
     }
 
     static void dfs(int depth) {
         if (depth == 3) {
-            int[][] copyGraph = new int[N][M];
-            IntStream.range(0, N).forEach(i -> System.arraycopy(graph[i], 0, copyGraph[i], 0, M));
+            int[][] tempGraph = new int[N][M];
 
-            virus.forEach(point -> bfs(point.x, point.y, copyGraph));
-
-            int temp = 0;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < M; j++) {
-                    if (copyGraph[i][j] == 0) temp++;
+                    tempGraph[i][j] = graph[i][j];
                 }
             }
 
-            res = Math.max(res, temp);
+            for (Node virus : virusList) {
+                bfs(virus, tempGraph);
+            }
+
+            int safeArea = 0;
+            for (int[] row : tempGraph) {
+                for (int x : row) {
+                    if (x == 0) {
+                        safeArea++;
+                    }
+                }
+            }
+
+            answer = Math.max(answer, safeArea);
             return;
         }
 
@@ -58,31 +82,38 @@ public class Main {
         }
     }
 
-    static void bfs(int ox, int oy, int[][] graph) {
-        Queue<Point> q = new LinkedList<>();
-        q.add(new Point(ox, oy));
+    static void bfs(Node start, int[][] graph) {
+        Queue<Node> q = new LinkedList<>();
+        q.add(start);
 
         while (!q.isEmpty()) {
-            Point now = q.poll();
-            int x = now.x;
-            int y = now.y;
+            Node now = q.poll();
 
             for (int i = 0; i < 4; i++) {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
+                int nx = now.x + dx[i];
+                int ny = now.y + dy[i];
 
-                if ((0 <= nx && nx < N) && (0 <= ny && ny < M) && (graph[nx][ny] == 0)) {
-                    graph[nx][ny] = 2;
-                    q.add(new Point(nx, ny));
+                if (!(0 <= nx && nx < N)) {
+                    continue;
                 }
+                if (!(0 <= ny && ny < M)) {
+                    continue;
+                }
+                if (graph[nx][ny] != 0) {
+                    continue;
+                }
+
+                graph[nx][ny] = 2;
+                q.add(new Node(nx, ny));
             }
         }
     }
 
-    static class Point {
+    static class Node {
+
         int x, y;
 
-        public Point(int x, int y) {
+        public Node(int x, int y) {
             this.x = x;
             this.y = y;
         }
