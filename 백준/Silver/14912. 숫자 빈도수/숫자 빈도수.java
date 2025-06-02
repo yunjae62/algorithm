@@ -5,8 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N, count;
-    static char d;
+    static int N, d, count, place = 1;
 
     static int stoi(String s) {
         return Integer.parseInt(s);
@@ -17,15 +16,28 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
-        d = st.nextToken().charAt(0);
+        d = st.nextToken().charAt(0) - '0';
 
-        for (int i = 1; i <= N; i++) {
-            char[] arr = String.valueOf(i).toCharArray();
-            for (char c : arr) {
-                if (c == d) {
-                    count++;
+        while (place <= N) {
+            int higher = N / (place * 10);
+            int current = (N / place) % 10;
+            int lower = N % place;
+
+            if (d != 0) {
+                if (current > d) {
+                    count += (higher + 1) * place;
+                } else if (current == d) {
+                    count += higher * place + (lower + 1);
+                } else {
+                    count += higher * place;
+                }
+            } else {
+                if (higher > 0) {
+                    count += (higher - 1) * place + (current > 0 ? place : lower + 1);
                 }
             }
+
+            place *= 10;
         }
 
         System.out.println(count);
