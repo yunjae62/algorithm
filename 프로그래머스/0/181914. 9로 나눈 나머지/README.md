@@ -1,10 +1,10 @@
 # [level 0] 9로 나눈 나머지 - 181914 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181914?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181914?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 85.2 MB, 시간: 5.94 ms
+메모리: 62.4 MB, 시간: 10.49 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 06월 05일 23:02:27
+2025년 06월 05일 23:04:52
 
 ### 문제 설명
 
