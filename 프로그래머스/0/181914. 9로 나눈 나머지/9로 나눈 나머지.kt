@@ -1,3 +1,3 @@
 class Solution {
-    fun solution(number: String): Int = number.sumOf { it.digitToInt() } % 9
+    fun solution(number: String): Int = number.sumOf(Char::digitToInt) % 9
 }
