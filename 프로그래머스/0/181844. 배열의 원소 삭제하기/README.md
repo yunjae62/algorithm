@@ -1,10 +1,10 @@
 # [level 0] 배열의 원소 삭제하기 - 181844 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181844?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181844?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 87.4 MB, 시간: 0.21 ms
+메모리: 70 MB, 시간: 32.31 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 06월 30일 21:11:16
+2025년 06월 30일 21:16:33
 
 ### 문제 설명
 
