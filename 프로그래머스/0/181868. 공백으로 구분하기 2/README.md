@@ -1,10 +1,10 @@
 # [level 0] 공백으로 구분하기 2 - 181868 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181868) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181868?language=kotlin) 
 
 ### 성능 요약
 
-메모리: 91.5 MB, 시간: 1.08 ms
+메모리: 64.6 MB, 시간: 15.92 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 07월 12일 10:21:44
+2025년 07월 12일 10:23:21
 
 ### 문제 설명
 
