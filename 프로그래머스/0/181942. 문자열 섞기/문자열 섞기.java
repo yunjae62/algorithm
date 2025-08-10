@@ -1,21 +1,9 @@
 class Solution {
     public String solution(String str1, String str2) {
-        String answer = "";
-        int a = 0;
-        int b = 0;
-        
-        while (a + b < str1.length() + str2.length()) {
-            if (a < str1.length()) {
-                answer += str1.substring(a, a + 1);
-                a++;
-            }
-            
-            if (b < str2.length()) {
-                answer += str2.substring(b, b + 1);
-                b++;
-            }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str1.length(); i++) {
+            sb.append(str1.charAt(i)).append(str2.charAt(i));
         }
-        
-        return answer;
+        return sb.toString();
     }
 }
